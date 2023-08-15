@@ -2,23 +2,30 @@ using UnityEngine;
 
 public class CircularMovement : MonoBehaviour
 {
-    public Transform center; // Центр вокруг которого двигается предмет
-    public float radius = 2f; // Радиус окружности
-    public float speed = 1f; // Скорость вращения
+    public Transform center;
+    public float radius = 2f;
+    public float speed = 1f;
 
     private float angle = 0f;
+    public float smoothness = 5f; // Параметр плавности
 
     private void Update()
     {
-        angle += speed * Time.deltaTime; // Увеличиваем угол во времени
+        angle += speed * Time.deltaTime;
 
-        // Вычисляем новую позицию предмета на окружности
-        Vector3 newPosition = center.position + new Vector3(Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius);
-        transform.position = newPosition;
+        Vector3 targetPosition = center.position + new Vector3(Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius);
 
-        // Настроим ориентацию предмета к центру
+        // Интерполируем плавное перемещение от текущей позиции к целевой
+        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * smoothness);
+
         Vector3 lookAtPosition = center.position;
-        lookAtPosition.y = transform.position.y; // Сохраняем высоту, чтобы не наклонять предмет
+        lookAtPosition.y = transform.position.y;
         transform.LookAt(lookAtPosition);
     }
 }
+
+
+
+
+
+
